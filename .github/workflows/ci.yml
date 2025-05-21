@@ -10,10 +10,12 @@ on:
 jobs:
   semgrep-check:
     name: Semgrep Security Scan
-    uses: ./.github/workflows/semgrep.yml@main
+  
+    uses: ./.github/workflows/semgrep.yml
     with:
-      # Chemin vers le fichier de config Semgrep (optionnel)
+      
+      
       semgrep_config: '.semgrep.yml'
     secrets:
-      # Permet d’uploader le rapport SARIF dans GHAS
+    
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
