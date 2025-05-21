@@ -17,13 +17,13 @@ on:
 
 jobs:
   semgrep:
-    name: "Analyse Semgrep (runner: ${{ matrix.os }})"
+    name: "Analyse Semgrep (${{ matrix.os }})"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
-      steps:
+    steps:
       - name: "📥 Checkout du code"
         uses: actions/checkout@v3
 
@@ -39,3 +39,4 @@ jobs:
         with:
           sarif_file: ${{ steps.semgrep.outputs.sarif_output }}
           github_token: ${{ secrets.GH_TOKEN }}
+
