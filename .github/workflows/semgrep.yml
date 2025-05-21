@@ -8,8 +8,8 @@ on:
       semgrep_config:
         description: "Chemin vers le fichier de configuration Semgrep"
         required: false
-        type: string
         default: ".semgrep.yml"
+        type: string
     secrets:
       GH_TOKEN:
         description: "Token GitHub pour uploader le rapport SARIF"
