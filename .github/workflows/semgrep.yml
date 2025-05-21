@@ -1,39 +1,42 @@
 # .github/workflows/semgrep.yml
+
+name: "Workflow réutilisable Semgrep"
+
 on:
   workflow_call:
     inputs:
       semgrep_config:
-        description: 'Chemin vers le fichier de configuration Semgrep'
+        description: "Chemin vers le fichier de configuration Semgrep"
         required: false
-        default: '.semgrep.yml'
         type: string
+        default: ".semgrep.yml"
     secrets:
       GH_TOKEN:
-        description: 'Token GitHub pour uploader le rapport SARIF'
+        description: "Token GitHub pour uploader le rapport SARIF"
         required: true
-
 
 jobs:
   semgrep:
-    name: Analyse Semgrep (${{ matrix.os }})
+    name: "Analyse Semgrep (runner: ${{ matrix.os }})"
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-      - name: 📥 Checkout du code
+      - name: "📥 Checkout du code"
         uses: actions/checkout@v3
 
-      - name: 🔍 Exécuter Semgrep (format SARIF)
-        uses: returntocorp/semgrep-action@v2
+      - name: "🔍 Exécuter Semgrep (format SARIF)"
         id: semgrep
+        uses: returntocorp/semgrep-action@v2
         with:
           config: ${{ inputs.semgrep_config }}
           format: sarif
 
-      - name: ☁️ Uploader le rapport SARIF vers GHAS
+      - name: "☁️ Uploader le rapport SARIF vers GHAS"
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ steps.semgrep.outputs.sarif_output }}
           github_token: ${{ secrets.GH_TOKEN }}
+
