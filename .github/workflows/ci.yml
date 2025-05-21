@@ -13,20 +13,10 @@ on:
 jobs:
   semgrep-check:
     name: Semgrep Security Scan
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-
-    steps:
-      - name: 📥 Checkout du code
-        uses: actions/checkout@v3
-
-      - name: 🔁 Appel du workflow réutilisable Semgrep
-        uses: ./.github/workflows/semgrep.yml
-        with:
-          # Chemin vers ton fichier de config Semgrep
-          semgrep_config: './.semgrep.yml'
-        secrets:
-          # Token pour uploader le SARIF dans GHAS
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    uses: ./.github/workflows/semgrep.yml  # chemin vers le workflow réutilisable
+    with:
+      # chemin vers ton fichier de config Semgrep (optionnel)
+      semgrep_config: '.semgrep.yml'
+    secrets:
+      # token pour uploader le SARIF dans GHAS
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
