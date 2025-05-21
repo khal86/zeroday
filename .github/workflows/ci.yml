@@ -1,4 +1,4 @@
-# .github/workflows/ci.yml
+# Workflow consommateur qui appelle le précédent
 name: CI / Sécurité
 
 on:
@@ -13,10 +13,8 @@ on:
 jobs:
   semgrep-check:
     name: Semgrep Security Scan
-    uses: ./.github/workflows/semgrep.yml  # chemin vers le workflow réutilisable
+    uses: ./.github/workflows/semgrep.yml
     with:
-      # chemin vers ton fichier de config Semgrep (optionnel)
       semgrep_config: '.semgrep.yml'
     secrets:
-      # token pour uploader le SARIF dans GHAS
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
