@@ -12,12 +12,11 @@ on:
 
 jobs:
   semgrep-check:
-    name: Semgrep Security Scan
-    # Appel du workflow réutilisable
+    # On appelle ici le workflow réutilisable défini dans semgrep.yml
     uses: ./.github/workflows/semgrep.yml
     with:
-      # correspond à l'input déclaré dans semgrep.yml
+      # correspond à l’input semgrep_config déclaré dans semgrep.yml
       semgrep_config: '.semgrep.yml'
     secrets:
-      # correspond au secret déclaré dans semgrep.yml
+      # correspond au secret GH_TOKEN déclaré dans semgrep.yml
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
