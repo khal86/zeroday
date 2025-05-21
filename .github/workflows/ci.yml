@@ -1,24 +1,16 @@
-# .github/workflows/ci.yml  
 name: CI / Sécurité
 
 on:
   push:
-    branches:
-      - main
-      - 'release/*'
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   semgrep-check:
-    # Appel du workflow réutilisable
     uses: ./.github/workflows/semgrep.yml
-
-    # Inputs déclarés dans semgrep.yml (avec workflow_call.inputs)
     with:
+      # Facultatif si tu veux utiliser un fichier de config autre que .semgrep.yml
       semgrep_config: '.semgrep.yml'
-
-    # Secrets déclarés dans semgrep.yml (avec workflow_call.secrets)
     secrets:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
