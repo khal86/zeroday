@@ -1,86 +1,40 @@
-# .github/workflows/security-scans.yml
-name: "Workflow réutilisable – Scans Sécurité"
+# Workflow réutilisable qui lance Semgrep et publie le SARIF sur GHAS
+name: "Workflow réutilisable Semgrep"
 
 on:
   workflow_call:
     inputs:
-      config_path:
-        description: "Chemin vers le fichier de config Semgrep"
+      semgrep_config:
+        description: 'Chemin vers le fichier de configuration Semgrep'
         required: false
-        default: ".semgrep.yml"
+        default: '.semgrep.yml'
         type: string
     secrets:
       GH_TOKEN:
-        description: "GitHub token pour upload SARIF"
+        description: 'Token GitHub pour uploader le rapport SARIF'
         required: true
 
 jobs:
   semgrep:
-    name: "Semgrep (${{ matrix.os }})"
+    name: Analyse Semgrep (runner: ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with: { python-version: "3.x" }
-      - run: |
-          pip install semgrep
-          semgrep --config "${{ inputs.config_path }}" --sarif --output semgrep.sarif
-      - uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: semgrep.sarif
-          github_token: ${{ secrets.GH_TOKEN }}
 
-  codeql:
-    name: "CodeQL (${{ matrix.os }})"
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
-      - uses: actions/checkout@v3
-      - uses: github/codeql-action/init@v2
-        with: { languages: "[\"javascript\",\"python\"]" }   # adapte à ton stack
-      - name: Build
-        run: npm install   # ou mvn, gradle… selon ton projet
-      - uses: github/codeql-action/analyze@v2
-        with:
-          upload: true
+      - name: 🚀 Checkout du code
+        uses: actions/checkout@v3
 
-  trivy:
-    name: "Trivy Infrastructure Scan (${{ matrix.os }})"
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: aquasecurity/trivy-action@master
+      - name: 🔍 Exécuter Semgrep (format SARIF)
+        id: semgrep
+        uses: returntocorp/semgrep-action@v2
         with:
-          scan-type: "fs"
-          format: "sarif"
-          output: "trivy.sarif"
-      - uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: trivy.sarif
-          github_token: ${{ secrets.GH_TOKEN }}
+          config: ${{ inputs.semgrep_config }}
+          format: sarif
 
-  checkov:
-    name: "Checkov IaC Scan (${{ matrix.os }})"
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: bridgecrewio/checkov-action@master
+      - name: 📤 Uploader le rapport SARIF vers GHAS
+        uses: github/codeql-action/upload-sarif@v2
         with:
-          directory: .
-          output-format: sarif
-          output-file-path: checkov.sarif
-      - uses: github/codeql-action/upload-sarif@v2
-        with:
-          sarif_file: checkov.sarif
+          sarif_file: ${{ steps.semgrep.outputs.sarif_output }}
           github_token: ${{ secrets.GH_TOKEN }}
