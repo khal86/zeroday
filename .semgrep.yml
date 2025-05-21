@@ -1,0 +1,6 @@
+rules:
+  - id: example-rule
+    pattern: $X == $X
+    message: "Exemple de règle Semgrep"
+    severity: WARNING
+    languages: [python]
