@@ -1,4 +1,4 @@
-# .github/workflows/ci.yml
+# .github/workflows/ci.yml  
 name: CI / Sécurité
 
 on:
@@ -12,11 +12,13 @@ on:
 
 jobs:
   semgrep-check:
-    # On appelle ici le workflow réutilisable défini dans semgrep.yml
+    # Appel du workflow réutilisable
     uses: ./.github/workflows/semgrep.yml
+
+    # Inputs déclarés dans semgrep.yml (avec workflow_call.inputs)
     with:
-      # correspond à l’input semgrep_config déclaré dans semgrep.yml
       semgrep_config: '.semgrep.yml'
+
+    # Secrets déclarés dans semgrep.yml (avec workflow_call.secrets)
     secrets:
-      # correspond au secret GH_TOKEN déclaré dans semgrep.yml
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
