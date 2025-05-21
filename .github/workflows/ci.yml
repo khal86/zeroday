@@ -1,4 +1,4 @@
-# Workflow consommateur qui appelle le précédent
+# .github/workflows/ci.yml
 name: CI / Sécurité
 
 on:
@@ -13,8 +13,11 @@ on:
 jobs:
   semgrep-check:
     name: Semgrep Security Scan
+    # Appel du workflow réutilisable
     uses: ./.github/workflows/semgrep.yml
     with:
+      # correspond à l'input déclaré dans semgrep.yml
       semgrep_config: '.semgrep.yml'
     secrets:
+      # correspond au secret déclaré dans semgrep.yml
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
