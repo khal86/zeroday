@@ -6,10 +6,12 @@ on:
         description: 'Chemin vers le fichier de configuration Semgrep'
         required: false
         default: '.semgrep.yml'
+        type: string
     secrets:
       GH_TOKEN:
         description: 'Token GitHub pour uploader le rapport SARIF'
         required: true
+
 
 jobs:
   semgrep:
