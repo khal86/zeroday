@@ -1,0 +1,18 @@
+# .github/workflows/ci.yml
+name: CI / Sécurité
+on:
+  push:
+    branches: [ main, 'release/*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  semgrep-check:
+    name: Semgrep Security Scan
+    uses: ./.github/workflows/semgrep.yml
+    with:
+      # Chemin vers ta config Semgrep (optionnel)
+      semgrep_config: './configs/.semgrep.yml'
+    secrets:
+      # Permet d'uploader le SARIF dans GHAS
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
