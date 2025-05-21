@@ -30,9 +30,8 @@ jobs:
           config: ${{ inputs.semgrep_config }}
           format: sarif
 
-      - name: ☁️ Uploader le rapport SARIF vers GHAS
+            - name: ☁️ Uploader le rapport SARIF vers GHAS
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: ${{ steps.semgrep.outputs.sarif_output }}
-          # Pour être sûr que l’upload utilise bien le token passé :
-          token: ${{ inputs.GH_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
